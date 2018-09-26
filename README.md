@@ -1,3 +1,7 @@
+# Android Inline Hook ARM64
+
+This is the ARM64 version of [Android Inline Hook](https://github.com/GToad/Android_Inline_Hook.git). I highly recommend you to view [Android Inline Hook](https://github.com/GToad/Android_Inline_Hook.git) first.
+
 # Android Inline Hook
 
 This project make an Android .so file that can automatically do some native hook works.
@@ -9,6 +13,7 @@ If you can read Chinese or wanna see more picture, I've wrote some articles abou
 1. [Android Inline Hook Practice](https://gtoad.github.io/2018/07/06/Android-Native-Hook-Practice/)
 2. [Opcode Fix In Android Inline Hook](https://gtoad.github.io/2018/07/13/Android-Inline-Hook-Fix/)
 3. [An Introduction to Android Native Hook](https://gtoad.github.io/2018/07/05/Android-Native-Hook/)
+4. [Android Inline Hook ARM64 Practice](https://gtoad.github.io/2018/09/20/Android-Native-Hook-Practice-Arm64/)
 
 # Articles in English
 
@@ -36,10 +41,6 @@ I've make some examples in other repo, it includes code and the target APK file.
 
 1. [thumb-2 example](https://github.com/GToad/Android_Inline_Hook_Thumb_Example.git)
 2. [arm32 example](https://github.com/GToad/Android_Inline_Hook_Arm_Example.git)
-
-# ARM64
-
-Start to working. So the code in ./arm64 has not finished yet.
 
 # Contact
 
