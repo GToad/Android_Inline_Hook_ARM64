@@ -2,7 +2,7 @@
 
 This is the ARM64 version of [Android Inline Hook](https://github.com/GToad/Android_Inline_Hook.git). I highly recommend you to view [Android Inline Hook](https://github.com/GToad/Android_Inline_Hook.git) first.
 
-`This arm64-version is almost finished. But I still hneed some time on the docs and code-fix work. Thank you for your patience!`
+`This arm64-version is almost finished. But I still need some time on the docs and code-fix work. Thank you for your patience!`
 
 # Android Inline Hook
 
