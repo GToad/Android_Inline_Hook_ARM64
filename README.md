@@ -2,6 +2,8 @@
 
 This is the ARM64 version of [Android Inline Hook](https://github.com/GToad/Android_Inline_Hook.git). I highly recommend you to view [Android Inline Hook](https://github.com/GToad/Android_Inline_Hook.git) first.
 
+`This project is almost finished. But I still have some time on the docs and code-fix work. Thank you for your patience!`
+
 # Android Inline Hook
 
 This project make an Android .so file that can automatically do some native hook works.
