@@ -9,7 +9,7 @@ _shellcode_start_s:
 
     sub     sp, sp, #0x20
 
-    mrs     x0, NZCV, DAIF
+    mrs     x0, NZCV
     str     x0, [sp, #0x10]
     str     x30, [sp]   
     add     x30, sp, #0x20
