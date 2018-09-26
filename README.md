@@ -39,7 +39,6 @@ You can name the `__attribute__((constructor)) ModifyIBored()` function at your 
 
 1. `pModuleBaseAddr` is the address of your target so.
 2. `target_offset` is the offset of your hook point in the target so.
-3. `is_target_thumb` shows the hook point's CPU mode. You can know this information in the work of reversing before the hook work.
 
 `EvilHookStubFunctionForIBored` function is the thing you really wanna do when the hook works. You can name at your will, but keep the arg `(pt_regs *regs)`. It brings you the power to control the registers, like set r0 to 0x333 : `regs->uregs[0]=0x333;`.
 
