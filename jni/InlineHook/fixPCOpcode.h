@@ -6,10 +6,11 @@
 
 #define ALIGN_PC(pc)	(pc & 0xFFFFFFFC)
 
-bool isTargetAddrInBackup(uint32_t target_addr, uint32_t hook_addr, int backup_length);
+bool isTargetAddrInBackup(uint64_t target_addr, uint64_t hook_addr, int backup_length);
 
-int lengthFixArm32(uint32_t opcode);
+int lengthFixArm64(uint32_t opcode);
 
+static int getTypeInArm64(uint32_t instruction);
 static int getTypeInArm32(uint32_t instruction);
 
 int fixPCOpcodeArm(void *fixOpcodes , INLINE_HOOK_INFO* pstInlineHook);

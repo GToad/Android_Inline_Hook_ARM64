@@ -130,7 +130,7 @@ bool InitArmHookInfo(INLINE_HOOK_INFO* pstInlineHook)
         //currentOpcode += i; //GToad BUG
         LOGI("Arm64 Opcode to fix %d : %x",i,*currentOpcode);
         LOGI("Fix length : %d",lengthFixArm32(*currentOpcode));
-        pstInlineHook->backUpFixLengthList[i] = lengthFixArm32(*currentOpcode);
+        pstInlineHook->backUpFixLengthList[i] = lengthFixArm64(*currentOpcode);
         currentOpcode += 1; //GToad BUG
     }
     

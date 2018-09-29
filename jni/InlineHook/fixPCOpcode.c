@@ -86,6 +86,39 @@ enum INSTRUCTION_TYPE {
 	UNDEFINE,
 };
 
+int lengthFixArm64(uint32_t opcode)
+{
+    int type;
+    type = getTypeInArm64(opcode);
+    switch(type)
+    {
+        case B_COND_ARM64:return 32;break;
+        case BNE_ARM:
+        case BCS_ARM:
+        case BCC_ARM:
+        case BMI_ARM:
+        case BPL_ARM:
+        case BVS_ARM:
+        case BVC_ARM:
+        case BHI_ARM:
+        case BLS_ARM:
+        case BGE_ARM:
+        case BLT_ARM:
+        case BGT_ARM:
+        case BLE_ARM:return 12;break;
+        case BLX_ARM:
+        case BL_ARM:return 12;break;
+        case B_ARM:
+        case BX_ARM:return 8;break;
+        case ADD_ARM:return 24;break;
+        case ADR1_ARM:
+        case ADR2_ARM:
+        case LDR_ARM:
+        case MOV_ARM:return 12;break;
+        case UNDEFINE:return 4;
+    }    
+}
+
 
 int lengthFixArm32(uint32_t opcode)
 {
@@ -251,7 +284,7 @@ static int getTypeInArm32(uint32_t instruction)
 
 
 
-bool isTargetAddrInBackup(uint32_t target_addr, uint32_t hook_addr, int backup_length)
+bool isTargetAddrInBackup(uint64_t target_addr, uint64_t hook_addr, int backup_length)
 {
     if((target_addr<=hook_addr+backup_length)&&(target_addr>=hook_addr))
         return true;
@@ -361,6 +394,11 @@ int fixPCOpcodeArm(void *fixOpcodes , INLINE_HOOK_INFO* pstInlineHook)
     return 0;
 }
 
+int fixBcond(uint64_t pc, uint64_t lr, uint32_t instruction, uint32_t *trampoline_instructions, INLINE_HOOK_INFO* pstInlineHook)
+{
+	
+}
+
 int fixPCOpcodeArm64(uint64_t pc, uint64_t lr, uint32_t instruction, uint32_t *trampoline_instructions, INLINE_HOOK_INFO* pstInlineHook)
 {
     int type;
@@ -374,6 +412,53 @@ int fixPCOpcodeArm64(uint64_t pc, uint64_t lr, uint32_t instruction, uint32_t *t
     LOGI("THE ARM64 OPCODE IS %x",instruction);
     type = getTypeInArm64(instruction);
     //type = getTypeInArm(instruction); //判断该arm指令的种类
+	
+	if (type == B_COND_ARM64) {
+		//STP X_tmp1, X_tmp2, [SP, -0x10]
+		//LDR X_tmp2, ?
+		//[target instruction fix code] if you want
+		//BR X_tmp2
+		//B 8
+		//PC+imm*4
+        LOGI("B_COND_ARM64");
+		uint32_t target_ins;
+		uint32_t imm19;
+		uint64_t value;
+
+		imm19 = (instruction & 0xFFFFE0) >> 5;
+		value = pc + imm19*4;
+		if((imm19>>18)==1){
+			value = pc - 4*(0x7ffff-imm19+1);
+		}
+		if(isTargetAddrInBackup(value, (uint64_t)pstInlineHook->pHookAddr, pstInlineHook->backUpLength)){
+			//backup to backup
+			//B.COND ???
+			//B 28
+			int target_idx = (int)((value - (uint64_t)pstInlineHook->pHookAddr)/4);
+			int bc_ins_idx = (int)((pc - (uint64_t)pstInlineHook->pHookAddr)/4);
+			int idx = 0;
+			int gap = 0;
+			for(idx=bc_ins_idx+1;idx<target_idx;idx++){
+				gap += pstInlineHook->backUpFixLengthList[idx];
+			}
+			trampoline_instructions[trampoline_pos++] = (instruction & 0xff00000f) + ((gap+32)<<3); // B.XX 32+gap
+			trampoline_instructions[trampoline_pos++] = 0x14000007; //B 28
+		}
+		else{
+			//backup to outside
+			target_ins = *((uint32_t *)value);
+			trampoline_instructions[trampoline_pos++] = ((instruction & 0xff00000f) + (32<<3)) ^ 0x1; // B.anti_cond 32
+			trampoline_instructions[trampoline_pos++] = target_ins; //target_ins (of cource the target ins maybe need to fix, do it by yourself if you need)
+			trampoline_instructions[trampoline_pos++] = 0xa93f03e0; //STP X0, X0, [SP, -0x10] default
+			trampoline_instructions[trampoline_pos++] = 0x58000080; //LDR X0, 12
+			trampoline_instructions[trampoline_pos++] = 0xd61f0000; //BR X0
+			trampoline_instructions[trampoline_pos++] = 0x14000002; //B 8
+			trampoline_instructions[trampoline_pos++] = (uint32_t)(value >> 32);
+			trampoline_instructions[trampoline_pos++] = (uint32_t)(value & 0xffffffff);
+		}
+		
+        return 4*trampoline_pos;
+    }
 	if (type == ADR_ARM64) {
 		//LDR Rn, 4
 		//PC+imm*4
