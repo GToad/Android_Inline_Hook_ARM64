@@ -44,6 +44,10 @@ You can name the `__attribute__((constructor)) ModifyIBored()` function at your 
 
 After you finish the args above, just `ndk-build` and you will get your .so file.
 
+# ARM64 Design
+
+![](https://gtoad.github.io/img/in-post/post-android-native-hook-practice-ARM64/arm64hook.png)
+
 # Example
 
 I've make some examples in other repo, it includes code and the target APK file.
